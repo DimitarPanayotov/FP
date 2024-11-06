@@ -1,0 +1,25 @@
+(define (divisors-sum n)
+  (define (divisors-sum-helper i acc)
+    (if (= i n)
+        acc
+        (if (= (remainder n i) 0)
+            (divisors-sum-helper (+ i 1) (+ acc i))
+            (divisors-sum-helper (+ i 1) acc))))
+  (divisors-sum-helper 1 0)) 
+
+(define (done? n)
+  (= n (- (divisors-sum n) 2)))
+
+(define (sum-almost-done a b)
+  (define (is-almost-done? n)
+    (let loop ((i a))
+      (cond ((> i b) #f) 
+            ((and (done? i) (< (abs (- n i)) (min (- n a) (- b n)))) #t)
+            (else (loop (+ i 1))))))
+  (define (sum-loop i acc)
+    (if (> i b)
+        acc
+        (if (is-almost-done? i)
+            (sum-loop (+ i 1) (+ acc i))
+            (sum-loop (+ i 1) acc))))
+  (sum-loop a 0))
